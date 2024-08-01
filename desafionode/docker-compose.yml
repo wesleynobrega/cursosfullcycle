@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   nginx:
-    build: ./desafionode/nginx
+    build: ./nginx
     ports:
       - "8080:80"
     depends_on:
@@ -11,7 +11,7 @@ services:
   node-app:
     build: ./node-app
     volumes:
-      - ./node-app:/usr/src/app
+      - /usr/src/app
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
