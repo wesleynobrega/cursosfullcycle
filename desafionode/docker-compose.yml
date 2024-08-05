@@ -11,14 +11,16 @@ services:
   node-app:
     build: ./node-app
     volumes:
-      - /usr/src/app
+      - ./node-app:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
       - MYSQL_DATABASE=fullcycle
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   mysql:
     image: mysql:5.7
@@ -27,6 +29,12 @@ services:
       MYSQL_DATABASE: fullcycle
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 volumes:
   mysql-data:
